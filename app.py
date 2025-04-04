@@ -40,13 +40,13 @@ Available checks:
 
 Return a Python list of filter keys that should apply.
 """
-    response = openai.ChatCompletion.create(
-        model="gpt-4",
-        messages=[{"role": "user", "content": prompt}],
-        max_tokens=200
-    )
     try:
-        result = eval(response["choices"][0]["message"]["content"])
+        response = client.chat.completions.create(
+            model="gpt-4",
+            messages=[{"role": "user", "content": prompt}],
+            max_tokens=200
+        )
+        result = eval(response.choices[0].message.content.strip())
         return [f for f in result if f in FILTERS]
     except:
         return []
