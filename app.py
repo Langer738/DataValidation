@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import openai
 
+# Get API key from Streamlit secrets
 openai.api_key = st.secrets["openai"]["api_key"]  # Replace with your OpenAI key
 
 # === Define filters ===
