@@ -5,6 +5,7 @@ from openai import OpenAI
 
 # Initialize OpenAI client using secrets
 client = OpenAI(api_key=st.secrets["openai"]["api_key"])
+st.write("✅ OpenAI client initialized")
 
 # Sample filter functions
 def check_missing_emails(df):
