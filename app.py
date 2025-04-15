@@ -55,19 +55,17 @@ Do NOT include any explanation. Only return the Python list.
         st.code(content, language="python")
 
         result = eval(content)
-    print("AI raw output:", content)
-        
+
         # 🔁 Add fallback if AI doesn't return anything
         if not result:
             st.info("⚠️ No filters were suggested. Showing all filters for testing purposes.")
             return list(FILTERS.keys())
 
         return [f for f in result if f in FILTERS]
-   
+
     except Exception as e:
         st.error(f"❌ Error parsing AI response: {e}")
         return []
-
 
 # === Streamlit UI ===
 st.title("Smart CSV Validator with AI Filters")
