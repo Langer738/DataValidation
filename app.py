@@ -29,10 +29,43 @@ FILTER_DESCRIPTIONS = {
 
 # === Ask LLM which filters to apply ===
 def suggest_filters(headers, sample_rows):
-    # Temporary fake output to simulate GPT response
-    st.warning("🚧 GPT temporarily bypassed for debugging.")
-    return ["check_missing_emails", "flag_short_names"]
+    prompt = f"""
+You are a data validation assistant. Your job is to help select which data checks to run.
 
+Here are the CSV headers: {headers}
+Sample data:
+{sample_rows.to_dict(orient='records')[:3]}
+
+Available validation filters and their descriptions:
+{FILTER_DESCRIPTIONS}
+
+Based on the headers and sample data, return a Python list (e.g., ["check_missing_emails", "flag_short_names"])
+containing only the relevant filter keys from the list above.
+Do NOT include any explanation. Only return the Python list.
+"""
+    try:
+        response = client.chat.completions.create(
+            model="gpt-4",
+            messages=[{"role": "user", "content": prompt}],
+            max_tokens=200
+        )
+        content = response.choices[0].message.content.strip()
+
+        st.subheader("🧠 Raw AI Response (for debugging)")
+        st.code(content, language="python")
+
+        result = eval(content)
+
+        # 🔁 Add fallback if AI doesn't return anything
+        if not result:
+            st.info("⚠️ No filters were suggested. Showing all filters for testing purposes.")
+            return list(FILTERS.keys())
+
+        return [f for f in result if f in FILTERS]
+
+    except Exception as e:
+        st.error(f"❌ Error parsing AI response: {e}")
+        return []
 
 # === Streamlit UI ===
 st.title("Smart CSV Validator with AI Filters")
