@@ -1,6 +1,10 @@
+from openai import OpenAI
 import streamlit as st
 import pandas as pd
 import openai
+
+# Create OpenAI client using your secure secret key
+client = OpenAI(api_key=st.secrets["openai"]["api_key"])
 
 # Get API key from Streamlit secrets
 openai.api_key = st.secrets["openai"]["api_key"]  # Replace with your OpenAI key
