@@ -63,6 +63,8 @@ Do NOT include any explanation. Only return the Python list.
 
         return [f for f in result if f in FILTERS]
 
+    print("AI raw output:", content)
+    
     except Exception as e:
         st.error(f"❌ Error parsing AI response: {e}")
         return []
